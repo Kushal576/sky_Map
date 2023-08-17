@@ -33,7 +33,7 @@
     <ClCompile Include="EBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Users\Acer\Downloads\sphere\sphere\src\Sphere.cpp">
+    <ClCompile Include="Sphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -42,6 +42,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="default.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="sun.frag">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -58,7 +61,7 @@
     <ClInclude Include="EBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Users\Acer\Downloads\sphere\sphere\src\Sphere.h">
+    <ClInclude Include="Sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
