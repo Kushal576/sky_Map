@@ -24,6 +24,7 @@ public:
 	void setuniform4fm(const char* uniformName, glm::mat4 matrix);
 	void setuniform3v(const char* uniformName, glm::vec3 vector);
 	void setuniform1i(const char* uniformName, int value);
+	void setuniform3fm(const char* uniformName, glm::mat3 matrix);
 };
 
 

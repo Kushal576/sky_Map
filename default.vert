@@ -8,9 +8,13 @@ out vec2 texcoord;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform vec3 textransform;
 
 void main()
 {
 	gl_Position=projection*view*model*vec4(pos.x,pos.y,pos.z,1.0f);
-	texcoord=texcoordinates;
+	vec2 tex;
+	tex.x=texcoordinates.x+textransform.x;
+	tex.y=texcoordinates.y+textransform.y;
+	texcoord=tex;
 }

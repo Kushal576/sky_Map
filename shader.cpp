@@ -93,4 +93,10 @@ void shader::setuniform1i(const char* uniformName, int value)
 	glUniform1i(uniformLoc, value);
 }
 
+void shader::setuniform3fm(const char* uniformName, glm::mat3 matrix)
+{
+	unsigned int uniformLoc = glGetUniformLocation(ID, uniformName);
+	glUniformMatrix3fv(ID, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
 

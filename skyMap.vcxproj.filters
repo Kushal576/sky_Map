@@ -126,5 +126,8 @@
     <Image Include="..\..\Users\Acer\Downloads\sphereShader\sphereShader\bin\earth2048.bmp">
       <Filter>Source Files</Filter>
     </Image>
+    <Image Include="..\..\Users\Acer\Downloads\Whole_world_-_land_and_oceans.jpg">
+      <Filter>Source Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

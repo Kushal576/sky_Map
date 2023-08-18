@@ -194,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\Users\Acer\Downloads\sphereShader\sphereShader\bin\earth2048.bmp" />
+    <Image Include="..\..\Users\Acer\Downloads\Whole_world_-_land_and_oceans.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

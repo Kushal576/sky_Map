@@ -46,7 +46,8 @@ float fov = 60.0f;
 //earth's rotation
 float motion = 0.04167f;
 
-float latitude = 0;
+float latitude = 21.7172;
+float longitude = 85.3240;
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 cameraFront = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -220,14 +221,14 @@ int main()
 	-0.5f,  0.5f, -0.5f
 	};
 
-	glm::vec2 textranslate = glm::vec2(0.0f, latitude/90.0f);
+	glm::vec2 textranslate = glm::vec2(-longitude/360.0f, -(latitude)/180.0f);
 
 	float surfaceVertices[] = {
 		//vertices				//texture
-		0.0f,110.0f,110.0f,     0.0f,0.0f+textranslate.y,
-		0.0f,-110.0f,110.0f,	0.0f,1.0f+textranslate.y,	
-		0.0f,-110.0f,-110.0f,	1.0f,1.0f+textranslate.y,	
-		0.0f,110.0f,-110.0f,	1.0f,0.0f+textranslate.y
+		0.0f,110.0f,110.0f,     1.0f+textranslate.x,0.0f+textranslate.y,
+		0.0f,-110.0f,110.0f,	1.0f+textranslate.x,1.0f+textranslate.y,	
+		0.0f,-110.0f,-110.0f,	0.0f+textranslate.x,1.0f+textranslate.y,	
+		0.0f,110.0f,-110.0f,	0.0f+textranslate.x,0.0f+textranslate.y
 	};
 
 	unsigned int surfaceIndices[] = {
@@ -440,7 +441,8 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 
 	//textures
 	int img_width, img_height, nrChannels;
-	unsigned char* data = stbi_load("earth2048.bmp", &img_width, &img_height, &nrChannels, 0);
+	unsigned char* data = stbi_load("Whole_world_-_land_and_oceans.jpg", &img_width, &img_height, &nrChannels, 0);
+	stbi_set_flip_vertically_on_load(true);
 
 	unsigned int texture;
 	glGenTextures(1, &texture);
@@ -448,6 +450,7 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	if (data)
@@ -496,7 +499,7 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 	bool firstframe=true;
 
 	//related to showing surface
-	bool showSurface=true;
+	bool showSurface=false;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -534,12 +537,15 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 		//}
 
 		//position camera above the surface
-		glm::vec3 vec;
-		vec.x = cos(glm::radians(lon)) * cos(glm::radians(latitude));
-		vec.y = sin(glm::radians(latitude));
-		vec.z = sin(glm::radians(lon)) * cos(glm::radians(latitude));
-		vec = glm::normalize(vec);
-		cameraPos = vec;
+		if (showSurface)
+		{
+			glm::vec3 vec;
+			vec.x = cos(glm::radians(lon)) * cos(glm::radians(latitude));
+			vec.y = sin(glm::radians(latitude));
+			vec.z = sin(glm::radians(lon)) * cos(glm::radians(latitude));
+			vec = glm::normalize(vec);
+			cameraPos = vec*glm::vec1(3.0f);
+		}
 
 		//stars
 		shaderprogram.Activate();
@@ -619,6 +625,8 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 			view = glm::lookAt(cameraPos, cameraPos + cameraFront, upVector);
 			shaderprogram.setuniform4fm("model", model);
 			shaderprogram.setuniform4fm("view", view);
+			textranslate = glm::vec2(longitude / 360, -(latitude) / 180);
+			shaderprogram.setuniform3v("textransform", glm::vec3(textranslate, 1.0f));
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		}
 		//this else statement is making so that once the checkbutton value is clicked, it does not it does not show surface, the showSurface variable was updated though
@@ -652,6 +660,7 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 		//Imgui
 		ImGui::Begin("Controls");
 		ImGui::SliderFloat("LAT", &latitude, -90.0f, 90.0f);
+		ImGui::SliderFloat("LONG", &longitude, -180.0f, 180.0f);
 		ImGui::Checkbox("Surface",&showSurface);
 		ImGui::End();
 
