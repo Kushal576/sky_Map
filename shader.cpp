@@ -75,10 +75,22 @@ void shader::Delete()
 	glDeleteProgram(ID);
 }
 
-void shader::setuniform4fv(const char* uniformName, glm::mat4 matrix)
+void shader::setuniform4fm(const char* uniformName, glm::mat4 matrix)
 {
 	int uniformLoc = glGetUniformLocation(ID, uniformName);
 	glUniformMatrix4fv(uniformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
+void shader::setuniform3v(const char* uniformName, glm::vec3 vector)
+{
+	int uniformLoc = glGetUniformLocation(ID, uniformName);
+	glUniform3fv(uniformLoc, 1, glm::value_ptr(vector));
+}
+
+void shader::setuniform1i(const char* uniformName, int value)
+{	
+	unsigned int uniformLoc = glGetUniformLocation(ID, uniformName);
+	glUniform1i(uniformLoc, value);
 }
 
 

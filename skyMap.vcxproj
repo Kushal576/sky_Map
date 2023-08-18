@@ -151,25 +151,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Users\Acer\Downloads\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\..\Users\Acer\Downloads\imgui_impl_opengl3.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="VAO.cpp" />
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag" />
     <None Include="default.vert" />
-    <None Include="sun.frag" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Users\Acer\Downloads\imgui_impl_glfw.h" />
+    <ClInclude Include="..\..\Users\Acer\Downloads\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\..\Users\Acer\Downloads\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\..\Users\Acer\Downloads\stb_image.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\Users\Acer\Downloads\sphereShader\sphereShader\bin\earth2048.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

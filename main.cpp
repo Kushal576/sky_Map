@@ -9,7 +9,7 @@
 #include"VAO.h"
 #include"VBO.h"
 #include"Sphere.h"
-
+#include"stb_image.h"
 
 int height = 1200;
 int width = 1200;
@@ -34,9 +34,13 @@ bool firstmouse = GL_TRUE;
 //camera's field of view
 float fov = 60.0f;
 
+//earth's rotation
+float motion = 0.04167f;
+
+float latitude = 21.7172;
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraFront = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 upVector = glm::vec3(0.0f, 1.0f, 0.0f);
 
 
@@ -83,7 +87,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void processInput(GLFWwindow* window)
 {
-	float cameraSpeed = 8.0f;
+	float cameraSpeed = 25.0f;
 	float currentTime = glfwGetTime();
 	float deltaTime = currentTime - prevTime;
 	prevTime = currentTime;
@@ -108,6 +112,20 @@ void processInput(GLFWwindow* window)
 	{
 		cameraPos += glm::normalize(glm::cross(cameraFront, upVector))*cameraSpeed;
 	}
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		motion = -2;
+	}
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	{	
+		motion = 2;
+	}
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	{
+		motion = 0;
+	}
+	yaw = yaw + motion * deltaTime;
+	cameraFront = directionVector();
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -123,6 +141,14 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	float lon = glm::dot(cameraFront, sunPos);
+	glm::vec3 vec;
+	vec.x = cos(glm::radians(lon)) * cos(glm::radians(latitude));
+	vec.y = sin(glm::radians(latitude));
+	vec.z = sin(glm::radians(lon)) * cos(glm::radians(latitude));
+	vec = glm::normalize(vec);
+	cameraFront = vec;
+	cameraPos += cameraFront;
 
 	float cubevertices[] =
 	{
@@ -167,6 +193,19 @@ int main()
 	 0.5f,  0.5f,  0.5f,  
 	-0.5f,  0.5f,  0.5f,  
 	-0.5f,  0.5f, -0.5f
+	};
+
+	float surfaceVertices[] = {
+		//vertices				//texture
+		0.0f,110.0f,110.0f,     0.0f,0.0f,
+		0.0f,-110.0f,110.0f,	0.0f,1.0f,	
+		0.0f,-110.0f,-110.0f,	1.0f,1.0f,	
+		0.0f,110.0f,-110.0f,	1.0f,0.0f
+	};
+
+	unsigned int surfaceIndices[] = {
+		0,1,3,
+		1,2,3
 	};
 
 	glm::vec3 cubePositions[] =
@@ -237,17 +276,17 @@ glm::vec3(-29.919f,39.096f,87.042f), // Tau Tauri
 glm::vec3(34.060f,52.829f,77.775f), // Castor
 glm::vec3(40.457f,41.104f,81.693f), // Kappa Gem
 glm::vec3(36.345f,45.181f,81.472f), // Upsilon Gem
-glm::vec3(34.831f,46.484f,81.400f), // Iota Gem
+glm::vec3(32.889f,46.561f,82.161f), // Iota Gem
 glm::vec3(27.250f,50.272f,82.038f), // Tau Gem
 glm::vec3(20.715f,55.861f,80.314f), // Theta Gem
 glm::vec3(34.907f,37.428f,85.911f), // Wasat
-glm::vec3(31.585f,28.468f,90.509f), // Lambda Gem
+glm::vec3(32.305f,28.368f,90.286f), // Lambda Gem
 glm::vec3(25.970f,35.042f,89.987f), // Mekbuda
 glm::vec3(19.019f,22.274f,95.615f), // Xi Gem
 glm::vec3(15.709f,28.234f,94.636f), // Alhena
 glm::vec3(17.249f,42.467f,88.876f), // Mebsuta
 glm::vec3(14.069f,34.382f,92.844f), // Nu Gem
-glm::vec3(11.992f,38.284f,91.600f), // Tejat
+glm::vec3(9.656f,38.284f,91.875f), // Tejat
 glm::vec3(5.746f,38.284f,92.202f), // Propus
 glm::vec3(3.806f,39.547f,91.769f), // 1 Geminorum
 
@@ -259,9 +298,6 @@ glm::vec3(0.871f,99.823f,-5.890f), // Yildun
 glm::vec3(4.506f,99.019f,-13.229f), // Epsilon Ursae Minoris
 glm::vec3(11.816f,97.719f,-17.644f), // Zeta Ursae Minoris
 glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
-
-
-
 	};
 
 	float starvertices[] =
@@ -274,14 +310,12 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 		-10.364f, -2.094f, 99.439f,   // Alnilam
 		-5.267f, -16.797f, 98.438f,   // Saiph
 		-8.370f, -3.403f, 99.591f     // Alnitak //6
-
-
 	};
 
 	const unsigned int indices[]
 	{
 		//orion
-		0,2,0,6,6,4,4,3,3,1,6,5,3,2
+		0,2,0,6,6,4,4,3,3,1,6,5,3,2,1,5
 	};
 
 
@@ -322,7 +356,6 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 	//EBO1.Unbind();
 
 	//sphere
-
 	Sphere sphere(0.3f,36,18);
 
 	VAO sphereAO;
@@ -341,7 +374,6 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 	sphereEO.Unbind();
 
 	//asterisms
-
 	VAO AOasterisms;
 	AOasterisms.Bind();
 	VBO BOasterisms(starvertices,sizeof(starvertices));
@@ -355,12 +387,8 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 	EOasterisms.Unbind();
 
 
-	//sun
-
-	shader sunshader("default.vert","sun.frag");
-
 	//big sphere
-	Sphere grid(100.0f,18,6,true,2);
+	Sphere grid(110.0f,18,6,true,2);
 	VAO gridAO;
 	gridAO.Bind();
 
@@ -375,6 +403,46 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 	sphereBO.Unbind();
 	gridEO.Unbind();
 
+	//surface buffers
+	VAO AOsurface;
+	AOsurface.Bind();
+
+	VBO BOsurface(surfaceVertices, sizeof(surfaceVertices));
+	EBO EOsurface(surfaceIndices, sizeof(surfaceIndices));
+
+	//textures
+	int img_width, img_height, nrChannels;
+	unsigned char* data = stbi_load("earth2048.bmp", &img_width, &img_height, &nrChannels, 0);
+
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE,data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Could not load image!" << std::endl;
+	}
+	stbi_image_free(data);
+
+
+	AOsurface.linkVBO(BOsurface, 0, 3, 5);
+	AOsurface.linkVBO(BOsurface, 1, 2, 5);
+	AOsurface.linkEBO(EOsurface);
+
+	AOsurface.Unbind();
+	EOsurface.Unbind();
+	BOsurface.Unbind();
+
+
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -384,14 +452,16 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+
+	//related to position
+	bool firstframe=true;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glfwPollEvents();
 		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
 		
 		shaderprogram.Activate();
 		VAO1.Bind();
@@ -415,7 +485,9 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 
 		//stars
 		shaderprogram.Activate();
+		shaderprogram.setuniform1i("tex", 0);
 		sphereAO.Bind();
+		shaderprogram.setuniform3v("color",glm::vec3(1.0f, 1.0f, 1.0f));
 		glm::mat4 model = glm::mat4(1.0f);
 		for (int i = 0; i < sizeof(cubePositions)/sizeof(glm::vec3); i++)
 		{
@@ -425,9 +497,9 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 			//model = glm::rotate(model, 0 * (float)glfwGetTime() * glm::radians(45.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 			glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, upVector);
 			glm::mat4 projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 200.0f);
-			shaderprogram.setuniform4fv("model", model);
-			shaderprogram.setuniform4fv("view", view);
-			shaderprogram.setuniform4fv("projection", projection);
+			shaderprogram.setuniform4fm("model", model);
+			shaderprogram.setuniform4fm("view", view);
+			shaderprogram.setuniform4fm("projection", projection);
 			glDrawElements(GL_TRIANGLES, sphere.getIndexCount(), GL_UNSIGNED_INT, 0);
 		}
 
@@ -437,44 +509,76 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 		for (int i = 0; i < sizeof(starvertices) / 3*sizeof(float); i++)
 		{
 			model = glm::mat4(1.0f);
-			//model = glm::translate(model, cubePositions[i]);
-			/*model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));*/
-			//model = glm::rotate(model, 0 * (float)glfwGetTime() * glm::radians(45.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 			glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, upVector);
 			glm::mat4 projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 200.0f);
-			shaderprogram.setuniform4fv("model", model);
-			shaderprogram.setuniform4fv("view", view);
-			shaderprogram.setuniform4fv("projection", projection);
+			shaderprogram.setuniform4fm("model", model);
+			shaderprogram.setuniform4fm("view", view);
+			shaderprogram.setuniform4fm("projection", projection);
 			glDrawElements(GL_LINES, sizeof(indices), GL_UNSIGNED_INT, 0);
 		}
 
 
 		//sun
 		sphereAO.Bind();
-		sunshader.Activate();
+		shaderprogram.setuniform3v("color", glm::vec3(1.0f, 1.0f, 0.0f));
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, sunPos);
-		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
 		//model = glm::rotate(model, 0 * (float)glfwGetTime() * glm::radians(45.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 		glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, upVector);
 		glm::mat4 projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 200.0f);
-		shaderprogram.setuniform4fv("model", model);
-		shaderprogram.setuniform4fv("view", view);
-		shaderprogram.setuniform4fv("projection", projection);
+		shaderprogram.setuniform4fm("model", model);
+		shaderprogram.setuniform4fm("view", view);
+		shaderprogram.setuniform4fm("projection", projection);
 		glDrawElements(GL_TRIANGLES, sphere.getIndexCount(), GL_UNSIGNED_INT, 0);
 
 
 		//draw a enclosing sphere for reference. Drawing only the sector and stack lines may help.
 
 		gridAO.Bind();
-		shaderprogram.Activate();
+		glm::vec3 gridcolor = glm::vec3(0.5f, 0.5f, 0.5f);
+		shaderprogram.setuniform3v("color", gridcolor);
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f,0.0f,0.0f));
-		//model = glm::rotate(model, 0 * (float)glfwGetTime() * glm::radians(45.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-		shaderprogram.setuniform4fv("model", model);
-		shaderprogram.setuniform4fv("view", view);
-		shaderprogram.setuniform4fv("projection", projection);
+		model = glm::rotate(model, glm::radians(5.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+		shaderprogram.setuniform4fm("model", model);
+		shaderprogram.setuniform4fm("view", view);
+		shaderprogram.setuniform4fm("projection", projection);
 		glDrawElements(GL_LINES, grid.getLineIndexCount(), GL_UNSIGNED_INT, 0);
+
+		//surface
+		AOsurface.Bind();
+		shaderprogram.setuniform1i("tex", 1);
+		shaderprogram.setuniform3v("color", glm::vec3(0.0f, 0.3f, 0.0f));
+		float cose_sangle = glm::dot(glm::vec3(-1.0f, 0.0f, 0.0f), glm::normalize(sunPos));
+		float e_sangle = acos(cose_sangle);
+		model = glm::mat4(1.0f);
+		model = glm::rotate(model, e_sangle, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(latitude), glm::vec3(0.0f, 0.0f, -1.0f));
+	/*	if (firstframe == true)
+		{
+			if (latitude > 0)
+			{
+				cameraPos.z = 1;
+			}
+			else
+			{
+				cameraPos.z = -1;
+			}
+			firstframe = false;
+		}*/
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront, upVector);
+		shaderprogram.setuniform4fm("model", model);
+		shaderprogram.setuniform4fm("view", view);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		float costheta = glm::dot(glm::normalize(cameraFront), glm::normalize(sunPos));
+		if (costheta < 0)
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		else
+		{
+			glClearColor(0.0f, 0.0f,costheta*0.4, 1.0f);
+		}
 
 		glfwSwapBuffers(window);
 	}
@@ -495,8 +599,11 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 	gridEO.Delete();
 	gridBO.Delete();
 
+	AOsurface.Delete();
+	BOsurface.Delete();
+	EOsurface.Delete();
+
 	shaderprogram.Delete();
-	sunshader.Delete();
 	
 
 
