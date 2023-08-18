@@ -1,4 +1,8 @@
-﻿#include<iostream>
+﻿#include"imgui.h"
+#include"imgui_impl_glfw.h"
+#include"imgui_impl_opengl3.h"
+
+#include<iostream>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<glm/glm.hpp>
@@ -10,6 +14,8 @@
 #include"VBO.h"
 #include"Sphere.h"
 #include"stb_image.h"
+
+
 
 int height = 1200;
 int width = 1200;
@@ -31,13 +37,16 @@ int lastY = height / 2;
 //first mouse position flag
 bool firstmouse = GL_TRUE;
 
+//Cursor mode flag
+bool NORMAL_CURSOR = 0;
+
 //camera's field of view
 float fov = 60.0f;
 
 //earth's rotation
 float motion = 0.04167f;
 
-float latitude = 21.7172;
+float latitude = 0;
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 cameraFront = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -56,6 +65,11 @@ glm::vec3 directionVector()
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+	if (NORMAL_CURSOR)
+	{
+		return;
+	}
+
 	if (firstmouse)
 	{
 		lastX = xpos;
@@ -123,6 +137,17 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
 	{
 		motion = 0;
+	}
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		NORMAL_CURSOR = 1;
+	}
+	if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		NORMAL_CURSOR = 0;
+		
 	}
 	yaw = yaw + motion * deltaTime;
 	cameraFront = directionVector();
@@ -195,12 +220,14 @@ int main()
 	-0.5f,  0.5f, -0.5f
 	};
 
+	glm::vec2 textranslate = glm::vec2(0.0f, latitude/90.0f);
+
 	float surfaceVertices[] = {
 		//vertices				//texture
-		0.0f,110.0f,110.0f,     0.0f,0.0f,
-		0.0f,-110.0f,110.0f,	0.0f,1.0f,	
-		0.0f,-110.0f,-110.0f,	1.0f,1.0f,	
-		0.0f,110.0f,-110.0f,	1.0f,0.0f
+		0.0f,110.0f,110.0f,     0.0f,0.0f+textranslate.y,
+		0.0f,-110.0f,110.0f,	0.0f,1.0f+textranslate.y,	
+		0.0f,-110.0f,-110.0f,	1.0f,1.0f+textranslate.y,	
+		0.0f,110.0f,-110.0f,	1.0f,0.0f+textranslate.y
 	};
 
 	unsigned int surfaceIndices[] = {
@@ -335,8 +362,9 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 	glViewport(0, 0, width, height);
 
 
-	glfwSwapBuffers(window);
 
+
+	
 	shader shaderprogram("default.vert", "default.frag");
 	
 	//VAO for cube
@@ -442,8 +470,6 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 	EOsurface.Unbind();
 	BOsurface.Unbind();
 
-
-
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glfwSetCursorPosCallback(window, mouse_callback);
@@ -453,15 +479,39 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 
+	//ImGui Initializations
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& IO = ImGui::GetIO();
+
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330 core");
+	ImGui::StyleColorsClassic();
+
+
+
+
+
 	//related to position
 	bool firstframe=true;
+
+	//related to showing surface
+	bool showSurface=true;
 
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		//ImGUI
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+
 		glfwPollEvents();
 		glEnable(GL_DEPTH_TEST);
+
 		
 		shaderprogram.Activate();
 		VAO1.Bind();
@@ -482,6 +532,14 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 		//	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		//}
+
+		//position camera above the surface
+		glm::vec3 vec;
+		vec.x = cos(glm::radians(lon)) * cos(glm::radians(latitude));
+		vec.y = sin(glm::radians(latitude));
+		vec.z = sin(glm::radians(lon)) * cos(glm::radians(latitude));
+		vec = glm::normalize(vec);
+		cameraPos = vec;
 
 		//stars
 		shaderprogram.Activate();
@@ -546,15 +604,28 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 		shaderprogram.setuniform4fm("projection", projection);
 		glDrawElements(GL_LINES, grid.getLineIndexCount(), GL_UNSIGNED_INT, 0);
 
-		//surface
-		AOsurface.Bind();
-		shaderprogram.setuniform1i("tex", 1);
-		shaderprogram.setuniform3v("color", glm::vec3(0.0f, 0.3f, 0.0f));
-		float cose_sangle = glm::dot(glm::vec3(-1.0f, 0.0f, 0.0f), glm::normalize(sunPos));
-		float e_sangle = acos(cose_sangle);
-		model = glm::mat4(1.0f);
-		model = glm::rotate(model, e_sangle, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(latitude), glm::vec3(0.0f, 0.0f, -1.0f));
+
+		if (showSurface)
+		{
+			//surface
+			AOsurface.Bind();
+			shaderprogram.setuniform1i("tex", 1);
+			shaderprogram.setuniform3v("color", glm::vec3(0.0f, 0.3f, 0.0f));
+			float cose_sangle = glm::dot(glm::vec3(-1.0f, 0.0f, 0.0f), glm::normalize(sunPos));
+			float e_sangle = acos(cose_sangle);
+			model = glm::mat4(1.0f);
+			model = glm::rotate(model, e_sangle, glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(latitude), glm::vec3(0.0f, 0.0f, -1.0f));
+			view = glm::lookAt(cameraPos, cameraPos + cameraFront, upVector);
+			shaderprogram.setuniform4fm("model", model);
+			shaderprogram.setuniform4fm("view", view);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		}
+		//this else statement is making so that once the checkbutton value is clicked, it does not it does not show surface, the showSurface variable was updated though
+		//else
+		//{
+		//	cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
+		//}
 	/*	if (firstframe == true)
 		{
 			if (latitude > 0)
@@ -567,18 +638,29 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 			}
 			firstframe = false;
 		}*/
-		view = glm::lookAt(cameraPos, cameraPos + cameraFront, upVector);
-		shaderprogram.setuniform4fm("model", model);
-		shaderprogram.setuniform4fm("view", view);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 
 		float costheta = glm::dot(glm::normalize(cameraFront), glm::normalize(sunPos));
 		if (costheta < 0)
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		else
 		{
-			glClearColor(0.0f, 0.0f,costheta*0.4, 1.0f);
+			glClearColor(0.0f, 0.0f, costheta * 0.4, 1.0f);
 		}
+
+
+		//Imgui
+		ImGui::Begin("Controls");
+		ImGui::SliderFloat("LAT", &latitude, -90.0f, 90.0f);
+		ImGui::Checkbox("Surface",&showSurface);
+		ImGui::End();
+
+
+		//ImGUI Render
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+
 
 		glfwSwapBuffers(window);
 	}
@@ -606,6 +688,10 @@ glm::vec3(10.847f,96.926f,-22.084f), // Eta Ursae Minoris
 	shaderprogram.Delete();
 	
 
+	//ImGUI
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 
 	
 
