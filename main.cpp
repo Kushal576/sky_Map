@@ -413,6 +413,32 @@ glm::vec3(-61.136f, -45.115f, -65.016f), // Omega Capricorni
 glm::vec3(-60.243f, -42.562f, -67.522f), // Psi Capricorni
 glm::vec3(-56.174f, -25.508f, -78.701f), // Dabih
 glm::vec3(-52.221f, -21.578f, -82.507f), // Algedi
+
+//aquila
+glm::vec3(-48.272f, 11.258f, -86.851f), // Alshain
+glm::vec3(-45.909f, 15.503f, -87.476f), // Altair
+glm::vec3(-43.952f, 18.418f, -87.915f), // Tarazed
+glm::vec3(-36.536f, 5.496f, -92.924f), // Delta Aquilae
+glm::vec3(-47.425f, 1.850f, -88.020f), // Eta Aquilae
+glm::vec3(-54.577f, -1.323f, -83.783f), // Theta Aquilae
+glm::vec3(-27.756f, 24.038f, -93.015f), // Zeta Aquilae
+glm::vec3(-25.030f, 25.909f, -93.286f), // Epsilon Aquilae
+glm::vec3(-28.694f, -8.435f, -95.423f), // Lambda Aquilae
+
+//cancer
+glm::vec3(69.219f, 20.396f, 69.229f), // Acubens
+glm::vec3(62.870f, 31.004f, 71.317f), // Asellus Australis
+glm::vec3(55.530f, 15.964f, 81.619f), // Beta Cancri
+glm::vec3(61.143f, 36.457f, 70.231f), // Asellus Borealis
+glm::vec3(58.748f, 47.970f, 65.173f), // Iota Cancri
+glm::vec3(51.441f, 45.610f, 72.619f), // Chi Cancri
+
+//lyra
+glm::vec3(-12.508f, 62.638f, -76.942f), // Vega
+glm::vec3(-18.073f, 55.024f, -81.521f), // Sheliak
+glm::vec3(-21.397f, 54.049f, -81.369f), // Sulafat
+glm::vec3(-15.649f, 61.029f, -77.656f), // Zeta1 Lyrae
+glm::vec3(-19.019f, 60.070f, -77.653f), // Delta Lyrae
 	};
 
 	float starvertices[] =
@@ -593,9 +619,37 @@ glm::vec3(-52.221f, -21.578f, -82.507f), // Algedi
 -56.174f, -25.508f, -78.701f, // Dabih // 143
 -52.221f, -21.578f, -82.507f, // Algedi // 144
 
+//aquila
+-48.272f, 11.258f, -86.851f, // Alshain // 145
+-45.909f, 15.503f, -87.476f, // Altair // 146
+-43.952f, 18.418f, -87.915f, // Tarazed // 147
+-36.536f, 5.496f, -92.924f, // Delta Aquilae // 148
+-47.425f, 1.850f, -88.020f, // Eta Aquilae // 149
+-54.577f, -1.323f, -83.783f, // Theta Aquilae // 150
+-27.756f, 24.038f, -93.015f, // Zeta Aquilae // 151
+-25.030f, 25.909f, -93.286f, // Epsilon Aquilae // 152
+-28.694f, -8.435f, -95.423f, // Lambda Aquilae // 153
+
+//cancer
+69.219f, 20.396f, 69.229f, // Acubens // 154
+62.870f, 31.004f, 71.317f, // Asellus Australis // 155
+55.530f, 15.964f, 81.619f, // Beta Cancri // 156
+61.143f, 36.457f, 70.231f, // Asellus Borealis // 157
+58.748f, 47.970f, 65.173f, // Iota Cancri // 158
+51.441f, 45.610f, 72.619f, // Chi Cancri // 159
+
+//lyra
+-12.508f, 62.638f, -76.942f, // Vega // 160
+-18.073f, 55.024f, -81.521f, // Sheliak // 161
+-21.397f, 54.049f, -81.369f, // Sulafat // 162
+-15.649f, 61.029f, -77.656f, // Zeta1 Lyrae // 163
+-19.019f, 60.070f, -77.653f // Delta Lyrae // 164
+
 
 
 	};
+
+	
 
 	const unsigned int indices[]
 	{
@@ -629,7 +683,216 @@ glm::vec3(-52.221f, -21.578f, -82.507f), // Algedi
 		132,133,133,134,134,135,
 		//capricornus
 		136,137,137,138,138,139,138,140,139,140,140,141,140,143,142,143,143,144,
+		//aquila
+		145,146,146,147,146,148,148,149,149,150,148,151,151,152,148,153,
+		//cancer
+		154,155,155,156,155,157,157,158,157,159,
+		//lyra
+		160,163,163,161,163,164,161,162,162,164
+	};
 
+
+	float magnitudes[] = {
+		//orion
+		0.45f,   // Betelgeuse
+		0.12f,   // Rigel
+		1.64f,   // Bellatrix
+		2.23f,   // Mintaka
+		1.69f,   // Alnilam
+		2.09f,   // Saiph
+		1.74f,   // Alnitak
+
+		//leo
+		1.35f,   // Regulus
+		2.14f,   // Denebola
+		2.61f,   // Algieba
+		2.56f,   // Zosma
+		3.32f,   // Chertan
+		2.6f,    // Eta Leonis
+		3.44f,   // Adhafera
+		3.85f,   // Rasalas
+		2.97f,   // Epsilon Leonis
+
+		//ursa major
+		1.79f,   // Dubhe
+		2.34f,   // Merak
+		2.40f,   // Phecda
+		3.31f,   // Megrez
+		1.76f,   // Alioth
+		2.04f,   // Mizar
+		1.85f,   // Alkaid
+
+		//cassiopeia
+		2.24f,   // Schedar
+		2.27f,   // Caph
+		2.15f,   // Gamma Cassiopeiae
+		2.68f,   // Ruchbah
+		3.01f,   // Segin
+
+		//scorpius
+		1.62f,   // Shaula
+		2.39f,   // Kappa Scorpii
+		1.86f,   // Sargas
+		4.00f,   // N Scorpii
+		2.59f,   // Zeta² Scorpii
+		2.29f,   // Epsilon Scorpii
+		2.82f,   // Tau Scorpii
+		1.06f,   // Antares
+		2.62f,   // Acrab
+		2.29f,   // Dschubba
+		3.55f,   // Pi Scorpii
+		3.02f,   // Iota Scorpii
+
+		//taurus
+		0.87f,   // Aldebaran
+		3.65f,   // Gamma Tauri
+		1.60f,   // Pleiades
+		2.87f,   // Delta Tauri
+		1.68f,   // Elnath
+		2.97f,   // Zeta Tauri
+		3.41f,   // Lambda Tauri
+		3.62f,   // Omicron Tauri
+		3.84f,   // Theta square Tauri
+		3.52f,   // Ain
+		3.87f,   // Tau Tauri
+
+		//gemini
+		1.14f,   // Pollux
+		1.58f,   // Castor
+		3.57f,   // Kappa Gem
+		4.06f,   // Upsilon Gem
+		4.08f,   // Iota Gem
+		4.28f,   // Tau Gem
+		2.62f,   // Theta Gem
+		3.52f,   // Wasat
+		4.22f,   // Lambda Gem
+		3.42f,   // Mekbuda
+		3.34f,   // Xi Gem
+		1.93f,   // Alhena
+		2.70f,   // Mebsuta
+		3.62f,   // Nu Gem
+		2.66f,   // Tejat
+		3.28f,   // Propus
+		2.86f,   // 1 Geminorum
+
+		//ursa minor
+		1.98f,   // Polaris
+		2.07f,   // Kochab
+		3.41f,   // Pherkad
+		4.83f,   // Yildun
+		5.1f,    // Epsilon Ursae Minoris
+		2.99f,   // Zeta Ursae Minoris
+		4.16f,   // Eta Ursae Minoris
+
+		//pegasus
+		2.06f,   // Alpheratz
+		2.83f,   // Algenib
+		2.48f,   // Markab
+		2.44f,   // Scheat
+		2.44f,   // Homam
+		2.5f,    // Biham
+		2.38f,   // Enif
+		3.39f,   // Matar
+		2.88f,   // Pi Pegasi
+		3.75f,   // Lambda Pegasi
+		3.82f,   // Iota Pegasi
+		3.84f,   // Kappa Pegasi
+
+		//canis major
+		2.45f,   // Aludra
+		3.05f,   // Omega Canis Majoris
+		1.84f,   // Wezen
+		1.50f,   // Adhara
+		2.93f,   // Furud
+		4.0f,    // Omicron² Canis Majoris
+		-1.46f,  // Sirius
+		1.98f,   // Mirzam
+		3.55f,   // Nu² Canis Majoris
+		4.02f,   // Xi² Canis Majoris
+		2.37f,   // Iota Canis Majoris
+		2.85f,   // Multiphen
+		3.27f,   // Theta Canis Majoris
+
+		//aquarius
+		3.53f,   // Eta Aquarii
+		4.20f,   // Psi1 Aquarii
+		3.36f,   // B1 Aquarii
+		3.93f,   // Iota Aquarii
+		4.23f,   // Tau Aquarii
+		2.95f,   // Sadalmelik
+		2.87f,   // Sadalsuud
+		3.22f,   // Skat
+		4.16f,   // Ancha
+		3.77f,   // Albali
+		3.94f,   // Sadachbia
+		3.62f,   // Lambda Aquarii
+		2.87f,   // Zeta Aquarii
+
+		//sagittarius
+		2.81f,   // Tau Sagittarii
+		2.05f,   // Nunki
+		2.69f,   // Ascella
+		2.87f,   // Phi Sagittarii
+		2.70f,   // Kaus Borealis
+		2.82f,   // Kaus Media
+		1.83f,   // Kaus Australis
+		3.11f,   // Eta Sagittarii
+		2.93f,   // Alnasl (Gamma2 Sagittarii)
+
+		//cygnus
+		3.91f,   // Kappa Cygni
+		3.76f,   // Iota Cygni
+		2.86f,   // Delta Cygni
+		2.23f,   // Sadr
+		1.25f,   // Deneb
+		2.48f,   // Epsilon Cygni
+		2.87f,   // Zeta Cygni
+		3.09f,   // Mu Cygni
+		3.89f,   // Eta Cygni
+		3.08f,   // Albireo
+
+		//aries
+		1.95f,   // Gamma1 Arietis
+		2.64f,   // Sheratan
+		2.00f,   // Hamal
+		3.62f,   // 41 Arietis
+
+		//capricornus
+		2.87f,   // Deneb Algedi
+		3.69f,   // Nashira
+		4.05f,   // Iota Capricorni
+		3.77f,   // Zeta Capricorni
+		3.57f,   // Theta Capricorni
+		4.13f,   // Omega Capricorni
+		4.13f,   // Psi Capricorni
+		3.05f,   // Dabih
+		2.93f,   // Algedi
+
+		//aquila
+		1.75f,   // Alshain
+		0.76f,   // Altair
+		2.69f,   // Tarazed
+		3.40f,   // Delta Aquilae
+		3.18f,   // Eta Aquilae
+		3.29f,   // Theta Aquilae
+		2.98f,   // Zeta Aquilae
+		3.85f,   // Epsilon Aquilae
+		3.42f,   // Lambda Aquilae
+
+		//cancer
+		4.25f,   // Acubens
+		3.94f,   // Asellus Australis
+		3.52f,   // Beta Cancri
+		4.53f,   // Asellus Borealis
+		4.05f,   // Iota Cancri
+		4.67f,   // Chi Cancri
+
+		//lyra
+		0.03f,   // Vega
+		2.71f,   // Sheliak
+		3.24f,   // Sulafat
+		4.37f,   // Zeta1 Lyrae
+		3.47f    // Delta Lyrae
 	};
 
 
@@ -787,6 +1050,12 @@ glm::vec3(-52.221f, -21.578f, -82.507f), // Algedi
 	//related to showing surface
 	bool showSurface=true;
 
+	//related to showing asterisms
+	bool showAsterism = true;
+
+	//related to fixing camera Pos
+	bool freeCamera = false;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -824,7 +1093,7 @@ glm::vec3(-52.221f, -21.578f, -82.507f), // Algedi
 
 		//position camera above the surface 
 		//restricts camera movement
-		/*if (showSurface)
+		if (!freeCamera)
 		{
 			glm::vec3 vec;
 			vec.x = cos(glm::radians(lon)) * cos(glm::radians(latitude));
@@ -832,7 +1101,7 @@ glm::vec3(-52.221f, -21.578f, -82.507f), // Algedi
 			vec.z = sin(glm::radians(lon)) * cos(glm::radians(latitude));
 			vec = glm::normalize(vec);
 			cameraPos = vec*glm::vec1(1.0f);
-		}*/
+		}
 
 		//stars
 		shaderprogram.Activate();
@@ -844,7 +1113,8 @@ glm::vec3(-52.221f, -21.578f, -82.507f), // Algedi
 		{
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, cubePositions[i]);
-			/*model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));*/
+			float scalefactor =1.2f*( (magnitudes[i] + 1.46) / 6.56);
+			model = glm::scale(model, glm::vec3(1.4f-scalefactor, 1.4f-scalefactor, 1.4f-scalefactor));
 			//model = glm::rotate(model, 0 * (float)glfwGetTime() * glm::radians(45.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 			glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, upVector);
 			glm::mat4 projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 200.0f);
@@ -855,17 +1125,20 @@ glm::vec3(-52.221f, -21.578f, -82.507f), // Algedi
 		}
 
 
-		//Asterisms
-		AOasterisms.Bind();
-		for (int i = 0; i < sizeof(starvertices) / 3*sizeof(float); i++)
+		if (showAsterism)
 		{
-			model = glm::mat4(1.0f);
-			glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, upVector);
-			glm::mat4 projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 200.0f);
-			shaderprogram.setuniform4fm("model", model);
-			shaderprogram.setuniform4fm("view", view);
-			shaderprogram.setuniform4fm("projection", projection);
-			glDrawElements(GL_LINES, sizeof(indices), GL_UNSIGNED_INT, 0);
+			//Asterisms
+			AOasterisms.Bind();
+			for (int i = 0; i < sizeof(starvertices) / 3*sizeof(float); i++)
+			{
+				model = glm::mat4(1.0f);
+				glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, upVector);
+				glm::mat4 projection = glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 200.0f);
+				shaderprogram.setuniform4fm("model", model);
+				shaderprogram.setuniform4fm("view", view);
+				shaderprogram.setuniform4fm("projection", projection);
+				glDrawElements(GL_LINES, sizeof(indices), GL_UNSIGNED_INT, 0);
+			}
 		}
 
 
@@ -949,6 +1222,8 @@ glm::vec3(-52.221f, -21.578f, -82.507f), // Algedi
 		ImGui::SliderFloat("LAT", &latitude, -90.0f, 90.0f);
 		ImGui::SliderFloat("LONG", &longitude, -180.0f, 180.0f);
 		ImGui::Checkbox("Surface",&showSurface);
+		ImGui::Checkbox("Asterisms", &showAsterism);
+		ImGui::Checkbox("FreeCamera",&freeCamera);
 		ImGui::End();
 
 
